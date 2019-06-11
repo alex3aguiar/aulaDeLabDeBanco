@@ -65,3 +65,29 @@ DELIMITER ;
 UPDATE depto SET NomeDepto = 'teste' where CodDepto = 'POL01';
 
 
+
+
+
+DROP TRIGGER impedeTurmaComPoucoCredito; 
+ 
+DELIMITER  $$
+CREATE  TRIGGER impedeTurmaComPoucoCredito BEFORE INSERT
+ON Turma
+FOR EACH ROW
+BEGIN
+
+ DECLARE credito INT;
+ SELECT CreditoDisc INTO credito FROM  Disciplina  WHERE NumDisc = NEW.NumDisc;
+
+ 	IF credito < 3   THEN
+		signal sqlstate '45000' set message_text = "NOSSO ERRO de segunda";
+	END IF;
+END$$
+DELIMITER ;
+
+Insert into Turma
+values
+(323031,'INF01',1,'1D',50)
+
+
+	
